@@ -19,6 +19,25 @@ async function returnaddr() {
     console.log(adrdata.val().adres + ' config log');
     return adrdata.val().adres;
 }
+
+async function park_list(location){
+  var park;
+  var list = new Array;
+  const nanumdb = await database.ref('DATA');
+  //console.log("디비사이즈1 : "+nanumdb.length);
+  for(var index=0; index<500; index++){
+  //for(var index in nanumdb){
+    var temp = await nanumdb.child(index).child('adres').once('value');
+    //var temp = await database.ref('DATA/'+index).child('adres').once('value');
+    if(temp.val().indexOf(location) != -1){
+      await list.push(temp.val());
+      console.log(temp.val());
+    }//if
+  }//for
+  return list;
+}
+
 module.exports = {
   returnaddr: returnaddr
+  park_list: park_lists
 };

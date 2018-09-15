@@ -5,6 +5,7 @@ const {WebhookClient} = require('dialogflow-fulfillment');
 const {Card, Suggestion} = require('dialogflow-fulfillment');
 
 const returnaddr = require('./config.js').returnaddr;
+const park_list = require('./config.js').park_list;
 
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 
@@ -34,9 +35,20 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     agent.add(adr + ` test async`)
   }
 
+  async function park_list(agent){
+    const location = await agent.parameters['location'];
+    console.log("check loc: " + location);
+    var list = await park_list(location);
+     // for(var i=0; i<list.length; i++){
+     //   agent.add(list[i]);
+     // }
+    agent.add('결과임');
+  }
+
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
   intentMap.set('test intent', test);
+  intentMap.set('park_list', park_list);
   agent.handleRequest(intentMap);
 });
