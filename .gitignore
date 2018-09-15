@@ -10,6 +10,7 @@ yarn-error.log*
 
 # firbaserc
 .firebaserc
+
 # Runtime data
 pids
 *.pid

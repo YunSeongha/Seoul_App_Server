@@ -4,18 +4,14 @@ const functions = require('firebase-functions');
 const {WebhookClient} = require('dialogflow-fulfillment');
 const {Card, Suggestion} = require('dialogflow-fulfillment');
 
-const returnaddr = require('./config.js').returnaddr;
+const returnaddr = require('./config.js').returnaddr;//config파일의 returnaddr가져온거임
 const nanum = require('./config.js');
-
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
   const agent = new WebhookClient({ request, response });
   console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
-
-  // const context = agent.contexts;
-  // console.log('this part context: ' + context);
 
   function welcome (agent) {
     agent.add(`Welcome to my agent!`);
@@ -26,29 +22,38 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     agent.add(`I'm sorry, can you try again?`);
   }
 
-  async function test (agent){
-    var adr = await returnaddr();
-    const lati = await agent.parameters.lati;
-    const loti = await agent.parameters.loti;
-    console.log(adr + ': index log')
-    console.log('lati: ' + lati + ', loti: ' + loti);
-    agent.add(adr + ` test async`)
+  async function return_addr(agent){
+    var addr = agent.parameters['addr'];
+    var adr = await returnaddr(addr);
+    agent.add(adr)
   }
-
   async function park_list(agent){
     const location = await agent.parameters['location'];
-    console.log("check loc: " + location);
-    let list = await nanum.park_list(location);
-     // for(var i=0; i<list.length; i++){
-     //   agent.add(list[i]);
-     // }
-    agent.add('결과임');
+    //console.log("check loc: " + location);
+    var list = await nanum.park_list(location);
+     var end = list.length;
+       for(var i=0; i<end; i++){
+         agent.add(list[i]);
+       }
   }
+
+async function park_distance(agent){
+  const lo = await agent.parameters['lo'];
+  const la = await agent.parameters['la'];
+  //var result = await JSON.parse(nanum.park_distance(lo, la));
+var result = await nanum.park_distance(lo, la);
+  agent.add(result);
+}
+function pizzac(agent){
+	agent.add('kamza');
+}
 
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
-  intentMap.set('test intent', test);
+  intentMap.set('pizzac', pizzac);
+  intentMap.set('return_addr', return_addr);
   intentMap.set('park_list', park_list);
+  intentMap.set('park_distance', park_distance);
   agent.handleRequest(intentMap);
 });

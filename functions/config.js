@@ -1,48 +1,56 @@
 'use strict';
 
 const admin = require('firebase-admin');
-let data = require('./data.json');
 
 var config = {
-    apiKey: "AIzaSyDTVHhaAkYQAhaOG-jxz6Hhjt7kbSxQd8s",
-    authDomain: "testaddress-72692.firebaseapp.com",
-    databaseURL: "https://testaddress-72692.firebaseio.com",
-    projectId: "testaddress-72692",
-    storageBucket: "testaddress-72692.appspot.com",
-    messagingSenderId: "192573578542"
-};
-admin.initializeApp(config);
+   apiKey: "AIzaSyB5CpWIUm1sd0aygT56NlXKzDHVEmdwGVY",
+   authDomain: "chat-bot-mj.firebaseapp.com",
+   databaseURL: "https://chat-bot-mj.firebaseio.com",
+   projectId: "chat-bot-mj",
+   storageBucket: "chat-bot-mj.appspot.com",
+   messagingSenderId: "45119854196"
+ };
+var data = require('./data.json');
 
+admin.initializeApp(config);
+const maxlength = data.length;
 var database = admin.database();
 
-async function returnaddr() {
-    const adrdata = await database.ref('DATA/0').once('value');
-    console.log(adrdata.val().adres + ' config log');
-    return adrdata.val().adres;
-}
+ async function returnaddr(addr) {
+     const adrdata = await database.ref('DATA/'+addr).once('value');
+     console.log(adrdata.val().adres + ' config log');
+     return adrdata.val().adres;
+ }
 
 async function park_list(location){
-  var park;
   var list = new Array;
-
-  // for(var index=0; index<data.length; index++){
-  //   // var temp = await database.ref('DATA').child(index).child('adres').once('value');
-  //   //var temp = await database.ref('DATA/'+index).child('adres').once('value');
-  //   if(data[index].adres.indexOf(location) != -1){
-  //     await list.push(data[index].adres);
-  //     console.log(data[index].adres);
-  //   }//if
-  // }//for
-  for (var i=0;i<data.length;i++){
+  for(var i=0; i<maxlength; i++){
     if(data[i].adres.indexOf(location)!=-1){
       await list.push(data[i].adres);
-      console.log(data[i].adres);
-    }
-  }
+      //console.log(data[i].adres);
+    }//if
+  }//for
   return list;
-}
+}//park_list
+
+async function park_distance(lo, la){
+      var result = 1000;
+      var temp, temp2, loo, laa;
+      for(var i=0; i<maxlength; i++){
+        loo = data[i].lo - lo;
+        laa = data[i].la - la;
+        temp = Math.sqrt((loo*loo)+(laa*laa))
+        if(temp < result){
+          result = temp;
+          temp2 = data[i];
+        }//if
+        console.log(temp2.adres);
+      }//for
+      return temp2.adres;
+    }//park_distance
 
 module.exports = {
   returnaddr: returnaddr,
-  park_list: park_list
+  park_list: park_list,
+  park_distance: park_distance
 };
