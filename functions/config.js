@@ -1,6 +1,7 @@
 'use strict';
 
 const admin = require('firebase-admin');
+let data = require('./data.json');
 
 var config = {
     apiKey: "AIzaSyDTVHhaAkYQAhaOG-jxz6Hhjt7kbSxQd8s",
@@ -23,17 +24,21 @@ async function returnaddr() {
 async function park_list(location){
   var park;
   var list = new Array;
-  const nanumdb = await database.ref('DATA');
-  //console.log("디비사이즈1 : "+nanumdb.length);
-  for(var index=0; index<500; index++){
-  //for(var index in nanumdb){
-    var temp = await nanumdb.child(index).child('adres').once('value');
-    //var temp = await database.ref('DATA/'+index).child('adres').once('value');
-    if(temp.val().indexOf(location) != -1){
-      await list.push(temp.val());
-      console.log(temp.val());
-    }//if
-  }//for
+
+  // for(var index=0; index<data.length; index++){
+  //   // var temp = await database.ref('DATA').child(index).child('adres').once('value');
+  //   //var temp = await database.ref('DATA/'+index).child('adres').once('value');
+  //   if(data[index].adres.indexOf(location) != -1){
+  //     await list.push(data[index].adres);
+  //     console.log(data[index].adres);
+  //   }//if
+  // }//for
+  for (var i=0;i<data.length;i++){
+    if(data[i].adres.indexOf(location)!=-1){
+      await list.push(data[i].adres);
+      console.log(data[i].adres);
+    }
+  }
   return list;
 }
 
