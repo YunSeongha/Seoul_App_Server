@@ -38,6 +38,6 @@ async function park_list(location){
 }
 
 module.exports = {
-  returnaddr: returnaddr
-  park_list: park_lists
+  returnaddr: returnaddr,
+  park_list: park_list
 };
