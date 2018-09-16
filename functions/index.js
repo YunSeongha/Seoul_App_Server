@@ -38,11 +38,10 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   }
 
 async function park_distance(agent){
-  const lo = await agent.parameters['lo'];
-  const la = await agent.parameters['la'];
-  //var result = await JSON.parse(nanum.park_distance(lo, la));
-var result = await nanum.park_distance(lo, la);
-  agent.add(result);
+  const lo = await agent.parameters['longitude'];
+  const la = await agent.parameters['latitude'];
+  var result = await nanum.park_distance(lo, la);
+  agent.add(result.adres);
 }
 function pizzac(agent){
 	agent.add('kamza');
