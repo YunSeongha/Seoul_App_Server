@@ -4,7 +4,7 @@ const functions = require('firebase-functions');
 const {WebhookClient} = require('dialogflow-fulfillment');
 const {Card, Suggestion} = require('dialogflow-fulfillment');
 
-const closest = require('./closest.js')
+const closest = require('./closest.js');
 
 // const returnaddr = require('./config.js').returnaddr;//config파일의 returnaddr가져온거임
 // const nanum = require('./config.js');
@@ -14,6 +14,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   const agent = new WebhookClient({ request, response });
   console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
+  console.log(JSON.stringify(response.body));
 
   function welcome (agent) {
     agent.add(`Welcome to my agent!`);
@@ -24,13 +25,15 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     agent.add(`I'm sorry, can you try again?`);
   }
 
-  function closest_func (agent) {
+  async function closest_func (agent) {
     var lat = agent.parameters['lat'];
     var lng = agent.parameters['lng'];
     console.log("lat: " + lat);
     console.log("lng: " + lng);
-    var result = closest.closest(lat, lng);
-    console.log(result.adres);
+    var result = await closest.closest(lat, lng);
+    agent.add("여기가 제일 가깝네요 !");
+    agent.add('주소: ' + result.adres);
+    agent.add("주차장명: " + result.positn_nm);
   }
 //
 //   async function return_addr(agent){
