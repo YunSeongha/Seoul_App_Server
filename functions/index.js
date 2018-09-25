@@ -31,9 +31,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     console.log("lat: " + lat);
     console.log("lng: " + lng);
     var result = await closest.closest(lat, lng);
-    agent.add("여기가 제일 가깝네요 !");
     agent.add('주소: ' + result.adres);
-    agent.add("주차장명: " + result.positn_nm);
   }
 //
 //   async function return_addr(agent){
