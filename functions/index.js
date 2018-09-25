@@ -4,6 +4,8 @@ const functions = require('firebase-functions');
 const {WebhookClient} = require('dialogflow-fulfillment');
 const {Card, Suggestion} = require('dialogflow-fulfillment');
 
+const closest = require('./closest.js')
+
 // const returnaddr = require('./config.js').returnaddr;//config파일의 returnaddr가져온거임
 // const nanum = require('./config.js');
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
@@ -20,6 +22,15 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   function fallback (agent) {
     agent.add(`I didn't understand`);
     agent.add(`I'm sorry, can you try again?`);
+  }
+
+  function closest_func (agent) {
+    var lat = agent.parameters['lat'];
+    var lng = agent.parameters['lng'];
+    console.log("lat: " + lat);
+    console.log("lng: " + lng);
+    var result = closest.closest(lat, lng);
+    console.log(result.adres);
   }
 //
 //   async function return_addr(agent){
@@ -50,9 +61,10 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
-  intentMap.set('pizzac', pizzac);
-  intentMap.set('return_addr', return_addr);
-  intentMap.set('park_list', park_list);
-  intentMap.set('park_distance', park_distance);
+  // intentMap.set('pizzac', pizzac);
+  // intentMap.set('return_addr', return_addr);
+  // intentMap.set('park_list', park_list);
+  // intentMap.set('park_distance', park_distance);
+  intentMap.set('closest', closest_func);
   agent.handleRequest(intentMap);
 });

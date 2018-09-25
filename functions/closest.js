@@ -3,7 +3,7 @@
 const data = require('./data.json');
 const maxlength = data.length;
 
-async function park_distance(lat, lng){//현재 위치에서 가장 가까운 주차장
+async function closest(lat, lng){//현재 위치에서 가장 가까운 주차장
       var max = 100;//임시로 100
       var temp, result, lnn, laa;
       for(var i=0; i<maxlength; i++){
