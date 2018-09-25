@@ -4,8 +4,8 @@ const functions = require('firebase-functions');
 const {WebhookClient} = require('dialogflow-fulfillment');
 const {Card, Suggestion} = require('dialogflow-fulfillment');
 
-const returnaddr = require('./config.js').returnaddr;//config파일의 returnaddr가져온거임
-const nanum = require('./config.js');
+// const returnaddr = require('./config.js').returnaddr;//config파일의 returnaddr가져온거임
+// const nanum = require('./config.js');
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
@@ -21,31 +21,31 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     agent.add(`I didn't understand`);
     agent.add(`I'm sorry, can you try again?`);
   }
-
-  async function return_addr(agent){
-    var addr = agent.parameters['addr'];
-    var adr = await returnaddr(addr);
-    agent.add(adr)
-  }
-  async function park_list(agent){
-    const location = await agent.parameters['location'];
-    //console.log("check loc: " + location);
-    var list = await nanum.park_list(location);
-     var end = list.length;
-       for(var i=0; i<end; i++){
-         agent.add(list[i]);
-       }
-  }
-
-async function park_distance(agent){
-  const lo = await agent.parameters['longitude'];
-  const la = await agent.parameters['latitude'];
-  var result = await nanum.park_distance(lo, la);
-  agent.add(result.adres);
-}
-function pizzac(agent){
-	agent.add('kamza');
-}
+//
+//   async function return_addr(agent){
+//     var addr = agent.parameters['addr'];
+//     var adr = await returnaddr(addr);
+//     agent.add(adr)
+//   }
+//   async function park_list(agent){
+//     const location = await agent.parameters['location'];
+//     //console.log("check loc: " + location);
+//     var list = await nanum.park_list(location);
+//      var end = list.length;
+//        for(var i=0; i<end; i++){
+//          agent.add(list[i]);
+//        }
+//   }
+//
+// async function park_distance(agent){
+//   const lo = await agent.parameters['longitude'];
+//   const la = await agent.parameters['latitude'];
+//   var result = await nanum.park_distance(lo, la);
+//   agent.add(result.adres);
+// }
+// function pizzac(agent){
+// 	agent.add('kamza');
+// }
 
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
