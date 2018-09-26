@@ -2,10 +2,12 @@
 
 const functions = require('firebase-functions');
 const {WebhookClient} = require('dialogflow-fulfillment');
-const {Card, Suggestion, Payload} = require('dialogflow-fulfillment');
+const {Card, Suggestion} = require('dialogflow-fulfillment');
 
 const closest = require('./closest.js').closest;
 const top3 = require('./top3.js').top3;
+const status = require('./status.js');
+
 // const returnaddr = require('./config.js').returnaddr;//config파일의 returnaddr가져온거임
 // const nanum = require('./config.js');
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
@@ -30,6 +32,14 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     var result = await closest(lat, lng);
     var msg = result.adres;
     agent.add(msg+';'+result.la+';'+result.lo+';'+result.positn_cd);
+    agent.setContext({
+      'name' : 'status',
+      'lifespan' : 1,
+      'parameters' : {
+        'positn_cd' : result.positn_cd
+      }//parameters
+    });//set.Context
+    //agent.getContext('status');
   }
 
   async function top3_func (agent) {
@@ -43,7 +53,14 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     agent.add(result);
   }
 
-
+  async function status_func (agent) {
+    var positn_cd = agent.getContext('status').parameters['positn_cd'];
+    console.log(agent.getContext('status'));
+    console.log('positn_cd : ' +positn_cd);
+    var result_so = await status.status_so(positn_cd);
+    var result_gr = await status.status_gr(positn_cd);
+    agent.add(result_so + " : " + result_gr);
+  }
 
 //
 //   async function return_addr(agent){
@@ -77,5 +94,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('closest', closest_func);
   intentMap.set('top3', top3_func);
   intentMap.set('top3_closest', closest_func);
+  intentMap.set('status', status_func);
   agent.handleRequest(intentMap);
 });
