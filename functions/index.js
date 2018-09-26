@@ -31,7 +31,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     console.log("lng: " + lng);
     var result = await closest.closest(lat, lng);
     agent.add('주소: ' + result.adres);
-    agent.add('테스트용 라인입니다.');
   }
 //
 //   async function return_addr(agent){
