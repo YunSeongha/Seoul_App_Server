@@ -2,7 +2,7 @@
 
 const functions = require('firebase-functions');
 const {WebhookClient} = require('dialogflow-fulfillment');
-const {Card, Suggestion} = require('dialogflow-fulfillment');
+const {Card, Suggestion, Payload} = require('dialogflow-fulfillment');
 
 const closest = require('./closest.js');
 
@@ -14,7 +14,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   const agent = new WebhookClient({ request, response });
   console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
-  console.log(JSON.stringify(response.body));
 
   function welcome (agent) {
     agent.add(`Welcome to my agent!`);
@@ -32,6 +31,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     console.log("lng: " + lng);
     var result = await closest.closest(lat, lng);
     agent.add('주소: ' + result.adres);
+    agent.add('테스트용 라인입니다.');
   }
 //
 //   async function return_addr(agent){
