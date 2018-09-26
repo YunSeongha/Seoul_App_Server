@@ -4,8 +4,8 @@ const functions = require('firebase-functions');
 const {WebhookClient} = require('dialogflow-fulfillment');
 const {Card, Suggestion, Payload} = require('dialogflow-fulfillment');
 
-const closest = require('./closest.js');
-
+const closest = require('./closest.js').closest;
+const top3 = require('./top3.js').top3;
 // const returnaddr = require('./config.js').returnaddr;//config파일의 returnaddr가져온거임
 // const nanum = require('./config.js');
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
@@ -27,11 +27,24 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   async function closest_func (agent) {
     var lat = agent.parameters['lat'];
     var lng = agent.parameters['lng'];
-    console.log("lat: " + lat);
-    console.log("lng: " + lng);
-    var result = await closest.closest(lat, lng);
-    agent.add('주소: ' + result.adres);
+    var result = await closest(lat, lng);
+    var msg = result.adres;
+    agent.add(msg+';'+result.la+';'+result.lo+';'+result.positn_cd);
   }
+
+  async function top3_func (agent) {
+    var lat = agent.parameters['lat'];
+    var lng = agent.parameters['lng'];
+    var temp = await top3(lat, lng);
+    console.log('log : ' + temp);
+    console.log('log2 : ' + temp[0].la);
+    var msg = '가까운 주차장을 찾았어요!';
+    var result = msg+';'+temp[0].la+';'+temp[0].lo+';'+temp[1].la+';'+temp[1].lo+';'+temp[2].la+';'+temp[2].lo;
+    agent.add(result);
+  }
+
+
+
 //
 //   async function return_addr(agent){
 //     var addr = agent.parameters['addr'];
@@ -61,10 +74,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
-  // intentMap.set('pizzac', pizzac);
-  // intentMap.set('return_addr', return_addr);
-  // intentMap.set('park_list', park_list);
-  // intentMap.set('park_distance', park_distance);
   intentMap.set('closest', closest_func);
+  intentMap.set('top3', top3_func);
+  intentMap.set('top3_closest', closest_func);
   agent.handleRequest(intentMap);
 });

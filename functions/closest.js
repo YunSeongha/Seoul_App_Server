@@ -4,7 +4,9 @@ const data = require('./data.json');
 const maxlength = data.length;
 
 async function closest(lat, lng){//현재 위치에서 가장 가까운 주차장
-      var max = 100;//임시로 100
+  console.log("lat: " + lat);
+  console.log("lng: " + lng);
+  var max = 100;//임시로 100
       var temp, result, lnn, laa;
       for(var i=0; i<maxlength; i++){
         lnn = data[i].lo - lng; //a^2+b^2=c^2임 그래서 직선거리를 구함
