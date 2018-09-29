@@ -7,6 +7,7 @@ const {Card, Suggestion} = require('dialogflow-fulfillment');
 const closest = require('./closest.js').closest;
 const top3 = require('./top3.js').top3;
 const status = require('./status.js');
+const spec_addr = require('./spec_addr.js').spec_addr;
 
 // const returnaddr = require('./config.js').returnaddr;//config파일의 returnaddr가져온거임
 // const nanum = require('./config.js');
@@ -62,6 +63,17 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     agent.add(result_so + " : " + result_gr);
   }
 
+  async function spec_addr_func(agent){
+      var addr = agent.parameters['addr'];
+      console.log('addr : ' + addr);
+      var latlng = await spec_addr(addr);
+      console.log('index : ' + latlng);
+      var lat = await latlng.lat;
+      var lng = await latlng.lng;
+      var result = await closest(lat,lng);
+      console.log(result);
+      agent.add(result.adres);
+    }
 //
 //   async function return_addr(agent){
 //     var addr = agent.parameters['addr'];
@@ -95,5 +107,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('top3', top3_func);
   intentMap.set('top3_closest', closest_func);
   intentMap.set('status', status_func);
+  intentMap.set('spec_addr', spec_addr_func);
   agent.handleRequest(intentMap);
 });

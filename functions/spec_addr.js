@@ -1,18 +1,22 @@
 'use strict';
 
-const data = require('./data.json');
-const maxlength = data.length;
-const nanumkey = '6568456d4768727031303062546a4643';
-
 var getJSON = require('get-json');
 var utf8 = require('utf8');
-var location = '둔촌동역';
-var loc = utf8.encode(location);
-var url = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input='+loc+'&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=AIzaSyD2h9IEq_ZZBVcPQ8OJl3cvUBDHZ2oo9UU';
-getJSON(url, function(error, response){
-   console.log(response.candidates[0].geometry.location);
-});
 
-module.export{
+var lat;
+var lng;
+var latlng;
+
+async function spec_addr(addr){
+  var loc = utf8.encode(addr);
+  var url = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input='+loc+'&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=AIzaSyD2h9IEq_ZZBVcPQ8OJl3cvUBDHZ2oo9UU';
+  getJSON(url, function(error, response){//json파싱
+      latlng = response.candidates[0].geometry.location;
+      console.log('addr : ' + latlng);
+  });//
+return latlng;//json을 리턴해서 index에서 lat = latlng.lat; lng = latlng.lng;로 한다음에 closest에 집어넣자
+}//spec_addr
+
+module.exports = {
   spec_addr:spec_addr
 };
