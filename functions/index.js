@@ -13,6 +13,7 @@ const status = require('./status.js');
 const spec_electric = require('./spec_electric.js').spec_electric;
 const spec_agency = require('./spec_agency.js').spec_agency;
 const closest_EVcharge = require('./closest_EVcharge').closest_EVcharge;
+const search_toilet = require('./search_toilet.js').search_toilet;
 const closest_park1 = require('./closest_park1').closest_park1;
 
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
