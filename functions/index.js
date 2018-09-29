@@ -13,6 +13,7 @@ const status = require('./status.js');
 const spec_electric = require('./spec_electric.js').spec_electric;
 const spec_agency = require('./spec_agency.js').spec_agency;
 const closest_EVcharge = require('./closest_EVcharge').closest_EVcharge;
+const search_toilet = require('./search_toilet.js').search_toilet;
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
@@ -111,6 +112,15 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     agent.add(result.cot_conts_name);
   }
 
+  async function search_toilet_func(agent){
+    var lat = agent.parameters['lat'];
+    var lng = agent.parameters['lng'];
+
+    var result = await search_toilet(lat, lng);
+    var msg = "가장 가까운 화장실을 찾았습니다 ! 지도로 이동하여 표시합니다...";
+    console.log(msg+';'+result.lat+';'+result.lng);
+  }
+
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
@@ -121,5 +131,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('spec_electric', spec_electric_func);
   intentMap.set('spec_agency', spec_agency_func);
   intentMap.set('closest_EVcharge', closest_EVcharge_func);
+  intentMap.set('search_toilet', search_toilet_func);
   agent.handleRequest(intentMap);
 });
