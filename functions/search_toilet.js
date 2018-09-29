@@ -17,7 +17,7 @@ async function search_toilet(la, lo){
       result = data[i]; //그 데이터를 결과에 저장
     }//if
   }//for
-  return(result);
+  return result;
   console.log(result);
 }
 
