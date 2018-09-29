@@ -12,7 +12,7 @@ const top3 = require('./top3.js').top3;
 const status = require('./status.js');
 const spec_electric = require('./spec_electric.js').spec_electric;
 const spec_agency = require('./spec_agency.js').spec_agency;
-
+const closest_EVcharge = require('./closest_EVcharge').closest_EVcharge;
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
@@ -100,9 +100,16 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         'positn_cd' : result.positn_cd
       }//parameters
     });//set.Context
-
   }//spec_agency_func
 
+  async function closest_EVcharge_func(agent){
+    var lat = agent.parameters['lat'];
+    var lng = agent.parameters['lng'];
+
+    var result = await closest_EVcharge(lat,lng);
+    console.log(result.cot_conts_name);
+    agent.add(result.cot_conts_name);
+  }
 
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
@@ -113,5 +120,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('status', status_func);
   intentMap.set('spec_electric', spec_electric_func);
   intentMap.set('spec_agency', spec_agency_func);
+  intentMap.set('closest_EVcharge', closest_EVcharge_func);
   agent.handleRequest(intentMap);
 });
