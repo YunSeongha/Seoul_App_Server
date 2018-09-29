@@ -13,6 +13,8 @@ const status = require('./status.js');
 const spec_electric = require('./spec_electric.js').spec_electric;
 const spec_agency = require('./spec_agency.js').spec_agency;
 const closest_EVcharge = require('./closest_EVcharge').closest_EVcharge;
+const closest_park1 = require('./closest_park1').closest_park1;
+
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
@@ -109,6 +111,15 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     var result = await closest_EVcharge(lat,lng);
     console.log(result.cot_conts_name);
     agent.add(result.cot_conts_name);
+  }//closest_EVcharge
+
+  async function closest_park1_func(agent){
+    var lat = agent.parameters['lat'];
+    var lng = agent.parameters['lng'];
+
+    var result = await closest_park1(lat, lng);
+    console.log(result.flynam);
+    agent.add(result.flynam);
   }
 
   let intentMap = new Map();
@@ -121,5 +132,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('spec_electric', spec_electric_func);
   intentMap.set('spec_agency', spec_agency_func);
   intentMap.set('closest_EVcharge', closest_EVcharge_func);
+  intentMap.set('closest_park1', closest_park1_func);
   agent.handleRequest(intentMap);
 });
