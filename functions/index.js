@@ -120,6 +120,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     var result = await search_toilet(lat, lng);
     var msg = "가장 가까운 화장실을 찾았습니다 ! 지도로 이동하여 표시합니다...";
     console.log(msg+';'+result.lat+';'+result.lng);
+    agent.add(msg+';'+result.lat+';'+result.lng);
   }
 
   async function closest_park1_func(agent){
