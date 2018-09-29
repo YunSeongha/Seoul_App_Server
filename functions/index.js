@@ -113,13 +113,22 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     agent.add(result.cot_conts_name);
   }//closest_EVcharge
 
+  async function search_toilet_func(agent){
+    var lat = agent.parameters['lat'];
+    var lng = agent.parameters['lng'];
+
+    var result = await search_toilet(lat, lng);
+    var msg = "가장 가까운 화장실을 찾았습니다 ! 지도로 이동하여 표시합니다...";
+    console.log(msg+';'+result.lat+';'+result.lng);
+  }
+
   async function closest_park1_func(agent){
     var lat = agent.parameters['lat'];
     var lng = agent.parameters['lng'];
 
     var result = await closest_park1(lat, lng);
-    console.log(result.flynam);
-    agent.add(result.flynam);
+    console.log(result.fly_nam);
+    agent.add(result.fly_nam);
   }
 
   let intentMap = new Map();
@@ -132,6 +141,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('spec_electric', spec_electric_func);
   intentMap.set('spec_agency', spec_agency_func);
   intentMap.set('closest_EVcharge', closest_EVcharge_func);
+  intentMap.set('search_toilet', search_toilet_func);
   intentMap.set('closest_park1', closest_park1_func);
   agent.handleRequest(intentMap);
 });
