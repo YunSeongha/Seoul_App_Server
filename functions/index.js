@@ -22,14 +22,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
 
-  function welcome (agent) {
-    agent.add(`Welcome to my agent!`);
-  }
-
-  function fallback (agent) {
-    agent.add(`I didn't understand`);
-    agent.add(`I'm sorry, can you try again?`);
-  }
 
   async function closest_func (agent) {
     var lat = agent.parameters['lat'];
@@ -110,7 +102,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
     var result = await closest_EVcharge(lat,lng);
     console.log(result.cot_conts_name);
-    agent.add(result.cot_conts_name);
+    var msg = '가장 가까운 전기충전소에요!';
+    agent.add(msg + ';'+  result.cot_coord_y + ';' +result.cot_coord_x);
   }//closest_EVcharge
 
   async function search_toilet_func(agent){
@@ -159,8 +152,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
 
   let intentMap = new Map();
-  intentMap.set('Default Welcome Intent', welcome);
-  intentMap.set('Default Fallback Intent', fallback);
   intentMap.set('closest', closest_func);
   intentMap.set('top3', top3_func);
   intentMap.set('top3_closest', closest_func);
