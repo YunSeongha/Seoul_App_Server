@@ -12,8 +12,11 @@ const top3 = require('./top3.js').top3;
 const status = require('./status.js');
 const spec_electric = require('./spec_electric.js').spec_electric;
 const spec_agency = require('./spec_agency.js').spec_agency;
-const closest_EVcharge = require('./closest_EVcharge').closest_EVcharge;
-const closest_park1 = require('./closest_park1').closest_park1;
+const closest_EVcharge = require('./closest_EVcharge.js').closest_EVcharge;
+const closest_park1 = require('./closest_park1.js').closest_park1;
+const closest_park0 = require('./closest_park0.js').closest_park0;
+const closest_park0_free = require('./closest_park0.js').closest_park0_free;
+const closest_park0_pay = require('./closest_park0.js').closest_park0_pay;
 
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 
@@ -127,8 +130,33 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     var lng = agent.parameters['lng'];
 
     var result = await closest_park1(lat, lng);
+    var msg = '한강에서 가장 가까운 주차장이에요!';
     console.log(result.fly_nam);
-    agent.add(result.fly_nam);
+    agent.add(msg + ';' + result.lat + ';' + result.lng + ';'+result.fly_nam +';'+ result.rmk);
+  }
+
+  async function closest_park0_func(agent){
+    var lat = agent.parameters['lat'];
+    var lng = agent.parameters['lng'];
+    var pay = agent.parameters['pay'].trim();
+    console.log('index ' + pay);
+    if(pay == "무료"){
+      var result = await closest_park0_free(lat,lng);
+      var msg = '가장 가까운 ' +pay + ' 주차장을 찾았어요!';
+      var msg2 = "";
+    }
+    else if(pay == "유료"){
+      var result = await closest_park0_pay(lat,lng);
+      var msg = '가장 가까운 ' +pay + ' 주차장을 찾았어요!';
+      var msg2 = '휴일 요금은 ' + result.holiday_pay_nm + ', 토요일 요금은 ' + result.saturday_pay_nm + '이에요!';
+    }
+
+    else{
+      var result = await closest_park0(lat, lng);
+      var msg = '가장 가까운 공영 주차장을 찾았어요!';
+      var msg2 = '휴일 요금은 ' + result.holiday_pay_nm + ', 토요일 요금은 ' + result.saturday_pay_nm + '이에요!';
+    }
+    agent.add(msg + ';' + result.lat + ';' + result.lng + ';' + result.parking_name +';' +msg2);
   }
 
   let intentMap = new Map();
@@ -143,5 +171,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('closest_EVcharge', closest_EVcharge_func);
   intentMap.set('search_toilet', search_toilet_func);
   intentMap.set('closest_park1', closest_park1_func);
+  intentMap.set('closest_park0', closest_park0_func);
+
   agent.handleRequest(intentMap);
 });
