@@ -4,9 +4,6 @@ const functions = require('firebase-functions');
 const {WebhookClient} = require('dialogflow-fulfillment');
 const {Card, Suggestion} = require('dialogflow-fulfillment');
 
-const getJSON = require('get-json');
-const utf8 = require('utf8');
-
 const closest = require('./closest.js').closest;
 const top3 = require('./top3.js').top3;
 const spec_electric = require('./spec_electric.js').spec_electric;
@@ -40,7 +37,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     var lat = agent.parameters['lat'];
     var lng = agent.parameters['lng'];
     var result = await closest(lat, lng);
-    var msg = result.adres;
+    var msg = '가장 가까운 주차장이에요! : ' + result.adres;
     agent.add(msg+';'+result.la+';'+result.lo+';'+result.positn_cd);
     agent.setContext({
       'name' : 'status',
@@ -78,7 +75,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     var lng = agent.parameters['lng'];
     var result = await spec_electric(lat, lng);
     console.log(result);
-    var msg = result.adres;
+    var msg = '가장 가까운 전기차 주차장이에요! : ' + result.adres;
     agent.add(msg+';'+result.la+';'+result.lo+';'+result.positn_cd);
     agent.setContext({
       'name' : 'status',
@@ -161,6 +158,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     }
     agent.add(msg + ';' + result.lat + ';' + result.lng + ';' + result.parking_name +';' +msg2);
   }
+
 
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
