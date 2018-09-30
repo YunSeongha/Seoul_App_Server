@@ -46,7 +46,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     console.log('log : ' + temp);
     console.log('log2 : ' + temp[0].la);
     var msg = '가까운 주차장을 찾았어요!';
-    var result = msg+';'+temp[0].la+';'+temp[0].lo+';'+temp[1].la+';'+temp[1].lo+';'+temp[2].la+';'+temp[2].lo;
+    var result = msg+';'+temp[0].la+';'+temp[0].lo+';'+temp[1].la+';'+temp[1].lo+';'+temp[2].la+';'+temp[2].lo+';'+temp[0].adres + ';' + temp[1].adres + ';' + temp[2].adres;
     agent.add(result);
   }
 
