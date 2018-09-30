@@ -111,7 +111,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     var lng = agent.parameters['lng'];
 
     var result = await search_toilet(lat, lng);
-    var msg = "가장 가까운 화장실을 찾았어요! 지도로 이동하여 표시합니다...";
+    var msg = "가장 가까운 화장실을 찾았어요!";
     console.log(msg+';'+result.lat+';'+result.lng);
     agent.add(msg+';'+result.lat+';'+result.lng);
   }
