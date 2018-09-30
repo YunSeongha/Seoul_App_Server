@@ -139,13 +139,13 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     else if(pay == "유료"){
       var result = await closest_park0_pay(lat,lng);
       var msg = '가장 가까운 ' +pay + ' 주차장을 찾았어요!';
-      var msg2 = '휴일 요금은 ' + result.holiday_pay_nm + ', 토요일 요금은 ' + result.saturday_pay_nm + '이에요!';
+      var msg2 = '휴일 요금은 ' + result.holiday_pay_nm + ', 토요일 요금은 ' + result.saturday_pay_nm + '에요!';
     }
 
     else{
       var result = await closest_park0(lat, lng);
       var msg = '가장 가까운 공영 주차장을 찾았어요!';
-      var msg2 = '휴일 요금은 ' + result.holiday_pay_nm + ', 토요일 요금은 ' + result.saturday_pay_nm + '이에요!';
+      var msg2 = '휴일 요금은 ' + result.holiday_pay_nm + ', 토요일 요금은 ' + result.saturday_pay_nm + '에요!';
     }
     agent.add(msg + ';' + result.lat + ';' + result.lng + ';' + result.parking_name +';' +msg2);
   }//closest_park0_func
