@@ -148,8 +148,12 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       var msg2 = '휴일 요금은 ' + result.holiday_pay_nm + ', 토요일 요금은 ' + result.saturday_pay_nm + '이에요!';
     }
     agent.add(msg + ';' + result.lat + ';' + result.lng + ';' + result.parking_name +';' +msg2);
-  }
+  }//closest_park0_func
 
+  async function spec_addr_func(agent){
+    var addr = agent.parameters['addr'];
+    agent.add(addr);
+  }
 
   let intentMap = new Map();
   intentMap.set('closest', closest_func);
@@ -162,6 +166,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('search_toilet', search_toilet_func);
   intentMap.set('closest_park1', closest_park1_func);
   intentMap.set('closest_park0', closest_park0_func);
+  intentMap.set('spec_addr', spec_addr_func);
 
   agent.handleRequest(intentMap);
 });
