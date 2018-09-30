@@ -111,7 +111,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     var lng = agent.parameters['lng'];
 
     var result = await search_toilet(lat, lng);
-    var msg = "가장 가까운 화장실을 찾았습니다 ! 지도로 이동하여 표시합니다...";
+    var msg = "가장 가까운 화장실을 찾았어요! 지도로 이동하여 표시합니다...";
     console.log(msg+';'+result.lat+';'+result.lng);
     agent.add(msg+';'+result.lat+';'+result.lng);
   }
@@ -134,7 +134,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     if(pay == "무료"){
       var result = await closest_park0_free(lat,lng);
       var msg = '가장 가까운 ' +pay + ' 주차장을 찾았어요!';
-      var msg2 = "";
+      var msg2 = " ";
     }
     else if(pay == "유료"){
       var result = await closest_park0_pay(lat,lng);
