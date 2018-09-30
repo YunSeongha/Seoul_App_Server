@@ -13,9 +13,7 @@ const closest_park1 = require('./closest_park1.js').closest_park1;
 const closest_park0 = require('./closest_park0.js').closest_park0;
 const closest_park0_free = require('./closest_park0.js').closest_park0_free;
 const closest_park0_pay = require('./closest_park0.js').closest_park0_pay;
-const closest_EVcharge = require('./closest_EVcharge').closest_EVcharge;
 const search_toilet = require('./search_toilet.js').search_toilet;
-const closest_park1 = require('./closest_park1').closest_park1;
 
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 
