@@ -102,7 +102,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
     var result = await closest_EVcharge(lat,lng);
     console.log(result.cot_conts_name);
-    var msg = '가장 가까운 전기충전소에요!';
+    var msg = '가장 가까운 전기충전소에요! : '+result.cot_conts_name;
     agent.add(msg + ';'+  result.cot_coord_y + ';' +result.cot_coord_x);
   }//closest_EVcharge
 
