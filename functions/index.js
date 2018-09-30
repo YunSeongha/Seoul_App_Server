@@ -27,8 +27,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     var lat = agent.parameters['lat'];
     var lng = agent.parameters['lng'];
     var result = await closest(lat, lng);
-    var msg = '가장 가까운 주차장이에요! : ' + result.adres;
-    agent.add(msg+';'+result.la+';'+result.lo+';'+result.positn_cd);
+    var msg = '가장 가까운 주차장이에요!';
+    agent.add(msg+';'+result.la+';'+result.lo+';'+result.positn_cd+';'+result.adres);
     agent.setContext({
       'name' : 'status',
       'lifespan' : 1,
@@ -65,8 +65,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     var lng = agent.parameters['lng'];
     var result = await spec_electric(lat, lng);
     console.log(result);
-    var msg = '가장 가까운 전기차 주차장이에요! : ' + result.adres;
-    agent.add(msg+';'+result.la+';'+result.lo+';'+result.positn_cd);
+    var msg = '가장 가까운 전기차 주차장이에요!';
+    agent.add(msg+';'+result.la+';'+result.lo+';'+result.positn_cd+';'+result.adres);
     agent.setContext({
       'name' : 'status',
       'lifespan' : 1,
@@ -84,9 +84,9 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     var result = await spec_agency(lat, lng, agency);
     console.log(agency);
     console.log('index result' + result.adres);
-    var msg = result.adres;
+    var msg = '찾으시는 주차장이에요!';
 
-    agent.add(msg+';'+result.la+';'+result.lo+';'+result.positn_cd);
+    agent.add(msg+';'+result.la+';'+result.lo+';'+result.positn_cd+';'+result.adres);
     agent.setContext({
       'name' : 'status',
       'lifespan' : 1,
@@ -102,8 +102,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
     var result = await closest_EVcharge(lat,lng);
     console.log(result.cot_conts_name);
-    var msg = '가장 가까운 전기충전소에요! : '+result.cot_conts_name;
-    agent.add(msg + ';'+  result.cot_coord_y + ';' +result.cot_coord_x);
+    var msg = '가장 가까운 전기충전소에요!';
+    agent.add(msg + ';'+  result.cot_coord_y + ';' +result.cot_coord_x+';'+result.cot_conts_name);
   }//closest_EVcharge
 
   async function search_toilet_func(agent){
